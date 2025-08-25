@@ -1,68 +1,75 @@
-#include <stdio.h>
+import java.util.*;
+}
 
-int main() {
-    // Variáveis para a primeira carta
-    char codigoA[5], nomeA[30];
-    int populacaoA;
-    float areaA, pibA;
 
-    // Variáveis para a segunda carta
-    char codigoB[5], nomeB[30];
-    int populacaoB;
-    float areaB, pibB;
+static List<Atributo> menuListaAtributos(Scanner sc) {
+System.out.println("\nDigite a ordem de prioridade dos atributos (ex: 5 6 1)");
+System.out.println("1) População | 2) Área | 3) PIB | 4) Pontos Turísticos | 5) Densidade | 6) PIB per capita");
+while (true) {
+String linha = sc.nextLine().trim();
+String[] partes = linha.split("\\s+");
+List<Atributo> lista = new ArrayList<>();
+try {
+for (String p : partes) {
+if (p.isBlank()) continue;
+int n = Integer.parseInt(p);
+Atributo a = mapNumeroAtributo(n);
+if (!lista.contains(a)) lista.add(a);
+}
+if (lista.size() >= 2) return lista;
+System.out.print("Informe pelo menos 2 atributos. Tente novamente: ");
+} catch (Exception e) {
+System.out.print("Entrada inválida. Digite números separados por espaço: ");
+}
+}
+}
 
-    // Cadastro da primeira carta
-    printf("=== Cadastro da Carta 1 ===\n");
-    printf("Digite o código da cidade: ");
-    scanf("%s", codigoA);
-    printf("Digite o nome da cidade: ");
-    scanf("%s", nomeA);
-    printf("Digite a população: ");
-    scanf("%d", &populacaoA);
-    printf("Digite a área (em km²): ");
-    scanf("%f", &areaA);
-    printf("Digite o PIB (em bilhões): ");
-    scanf("%f", &pibA);
 
-    // Cadastro da segunda carta
-    printf("\n=== Cadastro da Carta 2 ===\n");
-    printf("Digite o código da cidade: ");
-    scanf("%s", codigoB);
-    printf("Digite o nome da cidade: ");
-    scanf("%s", nomeB);
-    printf("Digite a população: ");
-    scanf("%d", &populacaoB);
-    printf("Digite a área (em km²): ");
-    scanf("%f", &areaB);
-    printf("Digite o PIB (em bilhões): ");
-    scanf("%f", &pibB);
+static Atributo mapNumeroAtributo(int n) {
+switch (n) {
+case 1: return Atributo.POPULACAO;
+case 2: return Atributo.AREA;
+case 3: return Atributo.PIB;
+case 4: return Atributo.PONTOS_TURISTICOS;
+case 5: return Atributo.DENSIDADE;
+case 6: return Atributo.PIB_PER_CAPITA;
+default: throw new IllegalArgumentException("Número de atributo inválido: " + n);
+}
+}
 
-    // Comparação de atributos
-    printf("\n=== Comparação das Cartas ===\n");
 
-    if (populacaoA > populacaoB) {
-        printf("População: %s venceu.\n", nomeA);
-    } else if (populacaoB > populacaoA) {
-        printf("População: %s venceu.\n", nomeB);
-    } else {
-        printf("População: Empate.\n");
-    }
+static String ler(Scanner sc, String prompt, java.util.function.Predicate<String> valido) {
+while (true) {
+System.out.print(prompt);
+String s = sc.nextLine();
+if (valido.test(s)) return s.trim();
+System.out.println("Valor inválido. Tente novamente.");
+}
+}
 
-    if (areaA > areaB) {
-        printf("Área: %s venceu.\n", nomeA);
-    } else if (areaB > areaA) {
-        printf("Área: %s venceu.\n", nomeB);
-    } else {
-        printf("Área: Empate.\n");
-    }
 
-    if (pibA > pibB) {
-        printf("PIB: %s venceu.\n", nomeA);
-    } else if (pibB > pibA) {
-        printf("PIB: %s venceu.\n", nomeB);
-    } else {
-        printf("PIB: Empate.\n");
-    }
+static long lerLong(Scanner sc, String prompt, java.util.function.LongPredicate valido) {
+while (true) {
+try {
+System.out.print(prompt);
+String s = sc.nextLine().trim().replace(".", "").replace(",", "");
+long v = Long.parseLong(s);
+if (valido.test(v)) return v;
+} catch (Exception ignored) {}
+System.out.println("Valor inválido. Tente novamente (inteiro).");
+}
+}
 
-    return 0;
+
+static double lerDouble(Scanner sc, String prompt, java.util.function.DoublePredicate valido) {
+while (true) {
+try {
+System.out.print(prompt);
+String s = sc.nextLine().trim().replace(".", "").replace(",", ".");
+double v = Double.parseDouble(s);
+if (valido.test(v)) return v;
+} catch (Exception ignored) {}
+System.out.println("Valor inválido. Tente novamente (número).");
+}
+}
 }
